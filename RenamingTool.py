@@ -7,11 +7,11 @@ def get_selected_content_browser_assets():
 def remove_prefix(asset, prefix):
     name = asset.get_name()
     separated = str(name).split('_')
-    
     i = 0
+    if len(separated) == 1:
+        return '_'.join(i for i in separated)
+    
     while i < len(separated):
-        print(i)
-        print(str(len(separated[i])) + " length")
         if len(separated[i]) > 2 and str(separated[i] + '_') not in prefix:
             print(separated[i] + '_')
             break
@@ -24,11 +24,12 @@ def remove_prefix(asset, prefix):
 def generate_new_asset_name(asset): 
     prefixes = {
             unreal.MaterialInstance : "MI_",
+            unreal.EditorUtilityWidgetBlueprint : "EUW_",
             unreal.Material : "M_",
             unreal.Texture : "T_",
             unreal.Blueprint : "BP_",   
             unreal.StaticMesh : "S_",
-            unreal.MaterialFunction : "MF_",            
+            unreal.MaterialFunction : "MF_",
             unreal.SkeletalMesh : "SK_",
             unreal.Skeleton : "SKEL_",
             unreal.AnimSequence : "A_",
@@ -44,6 +45,7 @@ def generate_new_asset_name(asset):
         if isinstance(asset, i):
             prefix = prefixes[i]
             prefixlist = [prefixes[b] for b in prefixes]
+            print(prefix)
             return  prefix + remove_prefix(asset, prefixlist)
 
     return asset.get_name()
@@ -52,7 +54,7 @@ def change_selected_assets_names():
     selected_assets = get_selected_content_browser_assets()
     for i in range(len(selected_assets)):
         asset = selected_assets[i]
-
+        print(asset)
         old_name = asset.get_name()
         new_name = generate_new_asset_name(asset)
         #print(asset)
@@ -69,7 +71,6 @@ def change_selected_assets_names():
             unreal.log_error("Could not rename" + old_path)
 
 def run():
-    print(get_selected_content_browser_assets())
     change_selected_assets_names()
 
 run()
