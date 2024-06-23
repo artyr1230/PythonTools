@@ -1,10 +1,11 @@
 import unreal
 
-def get_selected_content_browser_assets():
-    selected_assets = unreal.EditorUtilityLibrary().get_selected_assets()
-    return selected_assets
+"""
+Script adds prefixes to the selected assets
 
-def remove_prefix(asset, prefix):
+"""
+
+def remove_prefix(asset: unreal.Object, prefixes):
     name = asset.get_name()
     separated = str(name).split('_')
     i = 0
@@ -12,23 +13,21 @@ def remove_prefix(asset, prefix):
         return '_'.join(i for i in separated)
     
     while i < len(separated):
-        if len(separated[i]) > 2 and str(separated[i] + '_') not in prefix:
-            print(separated[i] + '_')
+        if len(separated[i]) > 2 and str(separated[i] + '_') not in prefixes:
             break
         else:
-            print(str(separated[i]) + " removed")
             separated.pop(i)
 
     return '_'.join(i for i in separated)
 
-def generate_new_asset_name(asset): 
+def generate_new_asset_name(asset: unreal.Object):
     prefixes = {
             unreal.MaterialInstance : "MI_",
             unreal.EditorUtilityWidgetBlueprint : "EUW_",
             unreal.Material : "M_",
             unreal.Texture : "T_",
             unreal.Blueprint : "BP_",   
-            unreal.StaticMesh : "S_",
+            unreal.StaticMesh : "SM_",
             unreal.MaterialFunction : "MF_",
             unreal.SkeletalMesh : "SK_",
             unreal.Skeleton : "SKEL_",
@@ -38,26 +37,24 @@ def generate_new_asset_name(asset):
             unreal.BlendSpace1D : "BS_",
             unreal.MorphTarget : "MT_",
             unreal.PhysicsAsset : "PHYS_",
-            unreal.NiagaraSystem : "NS_"
+            unreal.NiagaraSystem : "NS_",
+            unreal.NiagaraEmitter : "NE_"
             }
 
     for i in prefixes:
         if isinstance(asset, i):
             prefix = prefixes[i]
             prefixlist = [prefixes[b] for b in prefixes]
-            print(prefix)
             return  prefix + remove_prefix(asset, prefixlist)
 
     return asset.get_name()
 
 def change_selected_assets_names():
-    selected_assets = get_selected_content_browser_assets()
+    selected_assets = unreal.EditorUtilityLibrary().get_selected_assets()
     for i in range(len(selected_assets)):
-        asset = selected_assets[i]
-        print(asset)
+        asset: unreal.Object = selected_assets[i]
         old_name = asset.get_name()
         new_name = generate_new_asset_name(asset)
-        #print(asset)
         if old_name == new_name:
             print(new_name + " does not changed")
             continue
@@ -70,7 +67,8 @@ def change_selected_assets_names():
         if not rename_success:
             unreal.log_error("Could not rename" + old_path)
 
-def run():
+def main():
     change_selected_assets_names()
 
-run()
+if __name__ == "__main__":
+    main()
