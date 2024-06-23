@@ -3,7 +3,7 @@ import shutil
 import os
 import sys
 sys.path.append(os.path.dirname(os.path.realpath(__file__)))
-from startup import main as sup
+import startup
 
 """
 Execute this file to setup
@@ -42,7 +42,7 @@ def add_startup_script_to_config():
 def main():
     copy_scripts_to_project_dir()
     add_startup_script_to_config()
-    sup()
+    startup.main()
 
 if __name__ == "__main__":
     main()
