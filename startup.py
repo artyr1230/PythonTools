@@ -69,7 +69,7 @@ def add_script_to_tools_menu(script_class: PyScript):
 
     py_menu = script_class
     py_menu.set_icon()
-    
+
     py_menu.init_entry(
         owner_name=edit_menu.menu_name,
         menu=edit_menu.menu_name,
