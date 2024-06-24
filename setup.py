@@ -12,7 +12,7 @@ Execute this file to setup
 
 def copy_scripts_to_project_dir():
     current_dir = os.path.dirname(os.path.realpath(__file__))
-    project_dir = unreal.Paths.project_dir()
+    project_dir = unreal.Paths.project_dir() + "Content/"
     new_folder = "UE_PythonTools"
 
     if unreal.Paths.directory_exists(project_dir + new_folder):
@@ -22,7 +22,7 @@ def copy_scripts_to_project_dir():
 
 def add_startup_script_to_config():
     section = "[/Script/PythonScriptPlugin.PythonScriptPluginSettings]"
-    startup_path = unreal.Paths.project_dir() + "UE_PythonTools/startup.py"
+    startup_path = unreal.Paths.project_dir() + "Content/UE_PythonTools/startup.py"
     config_path = unreal.Paths.project_config_dir() + "DefaultEngine.ini"
     startup_scripts = "+StartupScripts=startup.py"
     additional_paths = f"+AdditionalPaths=(Path=\'{startup_path}\')"
@@ -43,6 +43,7 @@ def main():
     copy_scripts_to_project_dir()
     add_startup_script_to_config()
     startup.main()
+    print("Setup is over. Check Tools menu.")
 
 if __name__ == "__main__":
     main()

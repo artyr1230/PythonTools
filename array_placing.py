@@ -5,7 +5,11 @@ Script spawns an array of Static Mesh Actors from 0,0,0 coordinates
 
 """
 
-MARGIN = 100
+margin = 100.0  #
+axis = "X"      #
+origin_x = 0.0  #   Inputs via Widget
+origin_y = 0.0  #   
+origin_z = 0.0  #
 
 def spawn_actor(mesh: unreal.StaticMesh, location: unreal.Vector = unreal.Vector(), rotation: unreal.Rotator = unreal.Rotator()):
     editor_actor_subs = unreal.get_editor_subsystem(unreal.EditorActorSubsystem)
@@ -17,7 +21,7 @@ def array_placing():
     selected_assets = unreal.EditorUtilityLibrary().get_selected_assets()
 
     i = 0
-    temp = unreal.Vector()
+    temp = unreal.Vector(origin_x, origin_y, origin_z)
     while i < len(selected_assets):
         asset = selected_assets[i]
         if len(selected_assets) == 0:
@@ -26,12 +30,19 @@ def array_placing():
         
         if isinstance(asset, unreal.StaticMesh): # Main
             if(i == 0):
-                spawn_actor(mesh = asset)
+                spawn_actor(mesh = asset, location=temp)
             else:
-                temp.x = temp.x + abs(asset.get_bounding_box().min.x)
-                spawn_actor(location= unreal.Vector(x = temp.x), mesh = asset)
+                if axis == "X":
+                    temp.x = temp.x + abs(asset.get_bounding_box().min.x)
+                else:
+                    temp.y = temp.y + abs(asset.get_bounding_box().min.y)
 
-            temp.x = temp.x + asset.get_bounding_box().max.x + MARGIN
+                spawn_actor(location = temp, mesh = asset)
+
+            if axis == "X":
+                temp.x = temp.x + asset.get_bounding_box().max.x + float(margin)
+            else:
+                temp.y = temp.y + asset.get_bounding_box().max.y + float(margin)
         else:
             selected_assets.pop(i)
             continue
