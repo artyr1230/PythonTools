@@ -43,7 +43,7 @@ def main():
     copy_scripts_to_project_dir()
     add_startup_script_to_config()
     startup.main()
-    print("Setup is over. Check Tools menu.")
+    print("Setup is over. Check Tools menu and Content/UE_PythonTools Folder.")
 
 if __name__ == "__main__":
     main()
